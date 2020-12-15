@@ -1,3 +1,7 @@
+# !/usr/bin/python3
+# -*- coding: UTF-8 -*-
+
+
 create_img_table = (
     "create table if not exists img_table(id text primary key not null,"
     "url text, "

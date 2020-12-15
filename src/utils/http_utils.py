@@ -4,7 +4,7 @@ import time
 
 import requests
 
-from src.common.ProxyConstants import ProxyConstant
+from src.common.proxy_config import ProxyConstant
 
 
 class HttpClient:
