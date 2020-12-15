@@ -1,10 +1,8 @@
 # !/usr/bin/python3
 # -*- coding: UTF-8 -*-
 import json
-import random
 import time
 
-from src.common.common_config import CommonConstant
 from src.db.sq_connection import sqliteManager
 from src.model.img_attrib import WallPicAttr
 from src.utils.http_utils import HttpClient
