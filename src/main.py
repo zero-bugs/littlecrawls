@@ -1,7 +1,10 @@
 # !/usr/bin/python3
 # -*- coding: UTF-8 -*-
-from src.db.sq_connection import sqliteManager
+
+from src.img_service import ImgServiceApis
 
 if __name__ == "__main__":
-    print('hello world')
-    sqliteManager.selectImgs()
+    print('begin to work.')
+    imgService = ImgServiceApis()
+    imgService.scrawPicUseApiAll()
+    print('end work..')

@@ -13,7 +13,7 @@ create_img_table = (
     "dimension_x integer,"
     "dimension_y integer,"
     "ratio text,"
-    "file_size text,"
+    "file_size integer,"
     "file_type text,"
     "path text,"
     "colors text,"

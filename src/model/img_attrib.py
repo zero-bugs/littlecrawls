@@ -22,7 +22,6 @@ class WallPicAttr:
         self.category = None
         self.dimension_x = None
         self.dimension_y = None
-        self.resolution = None
         self.ratio = None
         self.file_size = None
         self.file_type = None
@@ -32,3 +31,13 @@ class WallPicAttr:
         self.created_time = None
         self.create_at = None
         self.update_at = None
+
+
+class SearchMeta:
+    def __init__(self):
+        self.current_page = None
+        self.last_page = None
+        self.per_page = None
+        self.total = None
+        self.query = None
+        self.seed = None
