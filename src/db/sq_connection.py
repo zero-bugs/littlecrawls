@@ -77,8 +77,8 @@ class SqliteManager:
         elif len(pics) == 0:
             return False
         try:
+            lock.acquire(True)
             for pic in pics:
-                lock.acquire(True)
                 self.cur.execute(
                     insert_img_sql,
                     (
@@ -102,7 +102,8 @@ class SqliteManager:
                         pic.update_at,
                     ),
                 )
-            self.conn.commit()
+            else:
+                self.conn.commit()
             return True
         except Exception as err:
             print(err)
