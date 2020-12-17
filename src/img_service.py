@@ -47,23 +47,16 @@ class ImgServiceApis:
 
     def start_search_use_api(self, url):
         print("begin to execute search url:{}".format(url))
-
-        headers = dict()
-        headers[
-            "user-agent"
-        ] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36"
-        headers["origin"] = "$whUrlAddress"
-        headers[
-            "accept"
-        ] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-        headers["pragma"] = "no-cache"
-        resp = HttpClient.http_retry_executor(url, headers)
+        headers = {"Connection": "Close"}
+        resp = HttpClient.http_retry_executor(url, headers=headers)
         if resp is None:
-            print("response is none, url:%s" % (url))
+            print("response is none, url:{}".format(url))
             return False
         elif resp.status_code != 200:
-            print("url:%s,status code:%d" % (url, resp.status_code))
+            print("url:{},status code:{}".format(url, resp.status_code))
             return False
+
+        print('begin to analyse response body.')
 
         pics = list()
         respJson = json.loads(resp.content)
@@ -91,7 +84,8 @@ class ImgServiceApis:
             pic.file_size = p.get("file_size")
             pic.file_type = p.get("file_type")
             pic.path = p.get("path")
-            pic.colors = p.get("colors")
+            pic.colors = ",".join(p.get("colors"))
+            pic.tags = ",".join([])
             pic.created_time = p.get("created_at")
             pic.create_at = datetime.datetime.now().strftime(time_format)
             pic.update_at = datetime.datetime.now().strftime(time_format)
