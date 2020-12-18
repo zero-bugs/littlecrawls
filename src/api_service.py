@@ -28,7 +28,7 @@ class ImgServiceApis:
                 CommonConstant.api_purity,
                 currentPage,
             )
-            meta = self.start_search_use_api(url)
+            meta = self.startSearchUseApi(url)
             print(
                 "end with scrawl, current page:%d, total page:%d"
                 % (currentPage, totalPage)
@@ -45,7 +45,7 @@ class ImgServiceApis:
                 % (currentPage, totalPage)
             )
 
-    def start_search_use_api(self, url):
+    def startSearchUseApi(self, url):
         print("begin to execute search url:{}".format(url))
         headers = {"Connection": "Close"}
         resp = HttpClient.http_retry_executor(url, headers=headers)
