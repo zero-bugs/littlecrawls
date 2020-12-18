@@ -1,7 +1,6 @@
 # !/usr/bin/python3
 # -*- coding: UTF-8 -*-
-
-from src.img_service import ImgServiceApis
+from src.api_service import ImgServiceApis
 
 if __name__ == "__main__":
     print('begin to work.')

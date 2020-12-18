@@ -8,7 +8,7 @@ from src.common.common_config import CommonConstant
 from src.common.constant import time_format
 from src.db.sq_connection import sqliteManager
 from src.model.img_attrib import WallPicAttr, SearchMeta
-from src.utils.http_utils import HttpClient
+from src.utils.http_utils import httpClient
 
 
 class ImgServiceApis:
@@ -35,7 +35,7 @@ class ImgServiceApis:
             )
             print("..")
 
-            time.sleep(1)
+            time.sleep(2)
 
             currentPage += 1
             totalPage = meta.last_page
@@ -48,7 +48,7 @@ class ImgServiceApis:
     def startSearchUseApi(self, url):
         print("begin to execute search url:{}".format(url))
         headers = {"Connection": "Close"}
-        resp = HttpClient.http_retry_executor(url, headers=headers)
+        resp = httpClient.http_retry_executor(url, headers=headers)
         if resp is None:
             print("response is none, url:{}".format(url))
             return False
