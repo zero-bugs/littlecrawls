@@ -70,7 +70,7 @@ insert_common_sql = (
 )
 
 select_common_sql = (
-    "select * from common_info where key= ?"
+    "select * from common_info where id = ? or key= ?"
 )
 
 del_common_sql = (

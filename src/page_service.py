@@ -3,8 +3,7 @@
 import datetime
 
 from src.common.common_config import CommonConstant
-from src.db.sq_connection import sqliteManager
-from src.utils.http_utils import HttpClient, httpClient
+from src.utils.http_utils import httpClient
 from bs4 import BeautifulSoup
 
 
@@ -12,7 +11,7 @@ class ImgServicePage:
     def __init__(self):
         pass
 
-    def startSearchUsePage(self, url, page=1):
+    def start_search_use_page(self, url, page=1):
         if page > 1:
             url += '&page={}'.format(page)
         headers = {
@@ -27,8 +26,14 @@ class ImgServicePage:
         if resp.status_code != 200:
             print("http request exception, code:{}, url:{}".format(resp.status_code, url))
 
-        soup = BeautifulSoup(resp.text, 'html.parser')
+        soup = BeautifulSoup(resp.content, 'html.parser')
+        img_tb_all = soup.select('#thumbs > section:nth-child(1) > ul > li')
+        for tb in img_tb_all:
+            print(tb)
+            print(tb.contents[0].attrs)
 
-    def startSearchTopListPic(self):
-        self.startSearchUsePage(
-            'https://wallhaven.cc/search?categories=111&purity=010&topRange=1M&sorting=toplist&order=desc')
+
+
+    def start_search_toplist_pic(self):
+        self.start_search_use_page(
+            'https://wallhaven.cc/search?categories=111&purity=011&topRange=1M&sorting=toplist&order=desc')

@@ -12,13 +12,13 @@ from src.utils.http_utils import httpClient
 
 
 class ImgServiceApis:
-    def scrawPicUseApiAll(self):
-        currentPage = 1
-        totalPage = 1
-        while currentPage <= totalPage:
+    def scrawl_img_use_api_all(self):
+        current_page = 14432
+        total_page = 32483
+        while current_page <= total_page:
             print(
                 "begin to request, current page:%d, total page:%d"
-                % (currentPage, totalPage)
+                % (current_page, total_page)
             )
 
             url = "{}/api/v1/search?apikey={}&categories={}&purity={}&page={}".format(
@@ -26,26 +26,27 @@ class ImgServiceApis:
                 CommonConstant.api_key,
                 CommonConstant.api_category,
                 CommonConstant.api_purity,
-                currentPage,
+                current_page,
             )
-            meta = self.startSearchUseApi(url)
+            meta = self.start_search_use_api(url)
             print(
                 "end with scrawl, current page:%d, total page:%d"
-                % (currentPage, totalPage)
+                % (current_page, total_page)
             )
             print("..")
 
             time.sleep(2)
 
-            currentPage += 1
-            totalPage = meta.last_page
+            current_page += 1
+            total_page = meta.last_page
 
             print(
-                "done with all api search, current page:%d, total page:%d"
-                % (currentPage, totalPage)
+                "done with all api search, current page:{} total page:{}, time:{}".format(
+                    current_page, total_page, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                )
             )
 
-    def startSearchUseApi(self, url):
+    def start_search_use_api(self, url):
         print("begin to execute search url:{}".format(url))
         headers = {"Connection": "Close"}
         resp = httpClient.http_retry_executor(url, headers=headers)
@@ -56,7 +57,7 @@ class ImgServiceApis:
             print("url:{},status code:{}".format(url, resp.status_code))
             return False
 
-        print('begin to analyse response body.')
+        print("begin to analyse response body.")
 
         pics = list()
         respJson = json.loads(resp.content)
@@ -91,6 +92,6 @@ class ImgServiceApis:
             pic.update_at = datetime.datetime.now().strftime(time_format)
             pics.append(pic)
         else:
-            sqliteManager.batchInsertImg(pics)
+            sqliteManager.batch_insert_img(pics)
 
         return meta

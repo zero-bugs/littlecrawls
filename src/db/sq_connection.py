@@ -3,8 +3,10 @@
 
 import sqlite3
 import threading
+from datetime import datetime
 
 from src.common.common_config import CommonConstant
+from src.common.constant import time_format
 from src.common.db_sql import create_img_table, insert_img_sql, select_img_sql, insert_common_sql, select_common_sql, \
     del_common_sql, create_para_table
 from src.model.img_attrib import WallPicAttr
@@ -73,7 +75,7 @@ class SqliteManager:
         finally:
             lock.release()
 
-    def batchInsertImg(self, pics: list):
+    def batch_insert_img(self, pics: list):
         if pics is None:
             return False
         elif len(pics) == 0:
@@ -114,7 +116,7 @@ class SqliteManager:
         finally:
             lock.release()
 
-    def selectImgs(self, limit=100, offset=0):
+    def select_images(self, limit=100, offset=0):
         try:
             lock.acquire(True)
             self.cur.execute(
@@ -141,21 +143,25 @@ class SqliteManager:
                     key,
                     value,
                     description,
+                    str(datetime.now().strftime(time_format)),
+                    str(datetime.now().strftime(time_format)),
                 ),
             )
+            self.conn.commit()
         except Exception as err:
             print(err)
             self.conn.rollback()
         finally:
             lock.release()
 
-    def select_common_tb(self, key):
+    def select_common_tb(self, index='',  key=''):
         try:
             lock.acquire(True)
             self.cur.execute(
                 select_common_sql,
                 (
-                    key
+                    index,
+                    key,
                 ),
             )
             return self.cur.fetchall()
@@ -166,7 +172,7 @@ class SqliteManager:
             lock.release()
         return None
 
-    def del_common_tb(self, index, key):
+    def del_common_tb(self, index=-1, key=''):
         try:
             lock.acquire(True)
             self.cur.execute(
@@ -176,6 +182,7 @@ class SqliteManager:
                     key,
                 ),
             )
+            self.conn.commit()
         except Exception as err:
             print(err)
             self.conn.rollback()
