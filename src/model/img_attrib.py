@@ -15,16 +15,16 @@ class WallPicAttr:
     def __init__(self):
         self.id = None
         self.url = None
-        self.views = None
-        self.favorites = None
+        self.views = 0
+        self.favorites = 0
         self.source = None
         self.purity = None
         self.category = None
-        self.dimension_x = None
-        self.dimension_y = None
-        self.ratio = None
-        self.file_size = None
-        self.file_type = None
+        self.dimension_x = 0
+        self.dimension_y = 0
+        self.ratio = 0
+        self.file_size = 0
+        self.file_type = 'image/jpg'
         self.path = None
         self.colors = list()
         self.tags = list()

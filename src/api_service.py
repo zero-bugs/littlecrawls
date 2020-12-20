@@ -13,7 +13,7 @@ from src.utils.http_utils import httpClient
 
 class ImgServiceApis:
     def scrawl_img_use_api_all(self):
-        current_page = 14432
+        current_page = 24956
         total_page = 32483
         while current_page <= total_page:
             print(

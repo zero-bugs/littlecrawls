@@ -49,10 +49,7 @@ class HttpClient:
         ] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
         headers["accept-language"] = "zh-CN,zh;q=0.9"
 
-        cookie_jar = RequestsCookieJar()
-        if useCookie and self.currentCookie is not None:
-            cookie_jar = self.currentCookie
-        elif useCookie and self.currentCookie is None:
+        if useCookie and self.currentCookie is None:
             self.login_in()
 
         for num in range(0, 5):
@@ -70,7 +67,7 @@ class HttpClient:
                         timeout=120,
                         proxies=proxy,
                         headers=headers,
-                        cookies=cookie_jar,
+                        cookies=self.currentCookie,
                         allow_redirects=False,
                     )
                 else:
@@ -80,7 +77,7 @@ class HttpClient:
                         timeout=120,
                         proxies=proxy,
                         headers=headers,
-                        cookies=cookie_jar,
+                        cookies=self.currentCookie,
                         allow_redirects=False,
                     )
                 if resp is not None and resp.status_code < 400:
@@ -91,7 +88,7 @@ class HttpClient:
                             resp.status_code, method, url
                         )
                     )
-                    print("request cookie:{}".format(cookie_jar))
+                    print("request cookie:{}".format(self.currentCookie))
                     print("resp cookie:{}".format(resp.cookies))
                     print("request headers:{}".format(headers))
                     print("response headers:{}".format(resp.headers))
@@ -132,7 +129,7 @@ class HttpClient:
 
         if len(local_cookie) != 0:
             self.currentCookie = RequestsCookieJar()
-            cookiejar_from_dict(json.loads(local_cookie),cookiejar=self.currentCookie)
+            cookiejar_from_dict(json.loads(local_cookie), cookiejar=self.currentCookie)
             print(f"use local cookie:{local_cookie}")
             return
 
