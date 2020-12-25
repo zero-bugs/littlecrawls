@@ -46,7 +46,7 @@ insert_img_sql = (
 )
 
 select_img_sql = (
-    "select * from img_table limit ? offset ? "
+    "select * from img_table where category = ? and purity = ? order by created_time desc limit ? offset ? "
 )
 
 create_para_table = (

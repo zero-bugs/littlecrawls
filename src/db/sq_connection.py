@@ -116,12 +116,15 @@ class SqliteManager:
         finally:
             lock.release()
 
-    def select_images(self, limit=100, offset=0):
+    def select_images(self, limit=100, offset=0, category=CommonConstant.category_type[2],
+                      purity=CommonConstant.purity_type[2]):
         try:
             lock.acquire(True)
             self.cur.execute(
                 select_img_sql,
                 (
+                    category,
+                    purity,
                     limit,
                     offset,
                 ),
@@ -154,7 +157,7 @@ class SqliteManager:
         finally:
             lock.release()
 
-    def select_common_tb(self, index='',  key=''):
+    def select_common_tb(self, index='', key=''):
         try:
             lock.acquire(True)
             self.cur.execute(
