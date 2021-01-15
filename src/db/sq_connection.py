@@ -8,7 +8,7 @@ from datetime import datetime
 from src.common.common_config import CommonConstant
 from src.common.constant import time_format
 from src.common.db_sql import create_img_table, insert_img_sql, select_img_sql, insert_common_sql, select_common_sql, \
-    del_common_sql, create_para_table
+    del_common_sql, create_para_table, select_img_id_sql
 from src.model.img_attrib import WallPicAttr
 
 
@@ -116,8 +116,8 @@ class SqliteManager:
         finally:
             lock.release()
 
-    def select_images(self, limit=100, offset=0, category=CommonConstant.category_type[2],
-                      purity=CommonConstant.purity_type[2]):
+    def select_images(self, limit=100, offset=0, category=CommonConstant.category_type_db[2],
+                      purity=CommonConstant.purity_type_db[2]):
         try:
             lock.acquire(True)
             self.cur.execute(
@@ -127,6 +127,23 @@ class SqliteManager:
                     purity,
                     limit,
                     offset,
+                ),
+            )
+            return self.cur.fetchall()
+        except Exception as err:
+            print(err)
+            self.conn.rollback()
+            return None
+        finally:
+            lock.release()
+
+    def select_images_with_id(self, index):
+        try:
+            lock.acquire(True)
+            self.cur.execute(
+                select_img_id_sql,
+                (
+                    index,
                 ),
             )
             return self.cur.fetchall()

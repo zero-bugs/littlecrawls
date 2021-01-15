@@ -4,7 +4,6 @@ import datetime
 
 from src.common.common_config import CommonConstant
 from src.common.constant import time_format
-from src.db.sq_connection import sqliteManager
 from src.model.img_attrib import WallPicAttr
 from src.utils.http_utils import httpClient
 from bs4 import BeautifulSoup

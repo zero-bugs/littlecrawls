@@ -49,6 +49,10 @@ select_img_sql = (
     "select * from img_table where category = ? and purity = ? order by created_time desc limit ? offset ? "
 )
 
+select_img_id_sql = (
+    "select * from img_table where id = ? "
+)
+
 create_para_table = (
     "create table if not exists common_info("
     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
