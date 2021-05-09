@@ -23,12 +23,14 @@ class ImgServiceApis:
         print(f"init completed, history file count:{len(historyImgList)}")
 
     def start_to_download_latest_imgs(
-        self, current_page=1, total_page=1000, start_time=None
+            self, current_page=1, total_page=1000, start_time=None,
+            category=CommonConstant.category_type_db[2],
+            purity=CommonConstant.purity_type_db[2]
     ):
-
         # 初始化初始时间
         if start_time is None:
-            val = sqliteManager.select_images(limit=1, offset=0)
+            val = sqliteManager.select_images(limit=1, offset=0, category=category,
+                                              purity=purity)
             if val is None or len(val) == 0:
                 print(f"cannot obtain start time, task stop")
                 return
@@ -46,9 +48,11 @@ class ImgServiceApis:
                 f"{threading.current_thread().name}-begin to request, current page:{current_page}, total page:{total_page}"
             )
 
-            url = "{}/api/v1/search?apikey={}&page={}".format(
+            url = "{}/api/v1/search?apikey={}&categories={}&purity={}&page={}".format(
                 CommonConstant.wall_haven_url,
                 CommonConstant.api_key,
+                CommonConstant.category_map[category],
+                CommonConstant.purity_map[purity],
                 current_page,
             )
 
@@ -73,6 +77,7 @@ class ImgServiceApis:
 
             item_nums = 0
             item_nums_no = 0
+            pic_create_time = None
             for p in respJson.get("data"):
                 item_nums_no += 1
                 pic = self.construct_img(p)
@@ -83,6 +88,11 @@ class ImgServiceApis:
                     pics.append(pic)
                 else:
                     item_nums += 1
+
+            print("item_nums:{}, item_nums_no:{},pic_create_time:{}, start_time:{}".format(
+                item_nums, item_nums_no, pic_create_time, start_time
+            ))
+
             if item_nums == item_nums_no:
                 print(f"task done.")
                 break
@@ -99,7 +109,7 @@ class ImgServiceApis:
 
                 if this_pic is None or len(this_pic) == 0:
                     self.download_single_pic(
-                        full_name, {"Connection": "Close"}, pic.id, pic.path
+                        full_name, {"Connection": "Close"}, pic.id, pic.path, create_time=pic.created_time
                     )
                     # 插入数据库
                     sqliteManager.insert_img(pic)
@@ -141,11 +151,11 @@ class ImgServiceApis:
         return pic
 
     def scrawl_img_use_api_category(
-        self,
-        current_page=1,
-        total_page=10000,
-        category=CommonConstant.category_type_url[2],
-        purity=CommonConstant.purity_type_url[2],
+            self,
+            current_page=1,
+            total_page=10000,
+            category=CommonConstant.category_type_db[2],
+            purity=CommonConstant.purity_type_db[2],
     ):
         current_page = current_page
         total_page = total_page
@@ -212,15 +222,15 @@ class ImgServiceApis:
         return meta
 
     def start_download_pic(
-        self,
-        start=0,
-        max_count=10000,
-        category=CommonConstant.category_type_db[2],
-        purity=CommonConstant.purity_type_db[2],
+            self,
+            start=0,
+            max_count=10000,
+            category=CommonConstant.category_type_db[2],
+            purity=CommonConstant.purity_type_db[2],
     ):
         headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/86.0.4240.198 Safari/537.36",
+                          "Chrome/86.0.4240.198 Safari/537.36",
             "referer": CommonConstant.wall_haven_url,
         }
 
@@ -253,7 +263,7 @@ class ImgServiceApis:
                     pic_name = ""
                     pos = pic[12].rfind("/")
                     if pos != -1:
-                        pic_name = pic[12][pos + 1 :]
+                        pic_name = pic[12][pos + 1:]
 
                     if len(pic_name) == 0:
                         print("picture name is invalid")
@@ -267,12 +277,14 @@ class ImgServiceApis:
 
                         time.sleep(1)
 
-    def download_single_pic(self, full_name, headers, pic_id, pic_path):
+    def download_single_pic(self, full_name, headers, pic_id, pic_path,
+                            create_time=time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())):
         print(
-            "{}-begin to download,id:{},name:{},time:{},url:{}".format(
+            "{}-begin to download,id:{},name:{},create_time:{}, time:{},url:{}".format(
                 threading.current_thread().name,
                 pic_id,
                 full_name,
+                create_time,
                 time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()),
                 pic_path,
             )

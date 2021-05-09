@@ -10,9 +10,10 @@ class CommonConstant:
     username = ""
     password = ""
 
-    category_type_url = ['100', '010', '001']
     category_type_db = ['anime', 'general', 'people']
+    category_map = {'anime': '100', 'general': '010', 'people': '001'}
 
-    purity_type_url = ['100', '010', '001']
     purity_type_db = ['sfw', 'sketchy', 'nsfw']
+    purity_map = {'sfw': '100', 'sketchy': '010', 'nsfw': '001'}
+
     download_img_list = 'file_list'
